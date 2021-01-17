@@ -17,7 +17,7 @@ namespace WebStore.Controllers
         //контроллер нужен для того, чтобы обработать входящее подключение
         // на каждый контроллер должно быть свое представление Views
 
-        public IActionResult Index() => View("SecondView");        
+        public IActionResult Index() => View(/*"SecondView"*/);        
 
         public IActionResult SecondAction()
         {
