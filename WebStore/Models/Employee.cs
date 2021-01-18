@@ -17,5 +17,7 @@ namespace WebStore.Models
 
         public int Age { get; set; }
 
+        public string EmpDate { get; set; }    //Date of Employment - дата трудоустройства
+
     }
 }
