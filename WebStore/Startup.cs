@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Infrastructure.Middleware;
+using WebStore.Infrastructure.Conventions;
 
 namespace WebStore
 {
@@ -12,7 +13,11 @@ namespace WebStore
     {
         public void ConfigureServices(IServiceCollection services)
         {
-           services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddMvc(opt => opt.Conventions.Add(new TestControllerModelConvention()));
+
+           services
+                .AddControllersWithViews(/*opt => opt.Conventions.Add(new TestControllerModelConvention())*/)
+                .AddRazorRuntimeCompilation();
         }
        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
