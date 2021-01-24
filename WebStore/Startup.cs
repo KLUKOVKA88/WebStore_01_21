@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+ï»¿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +28,7 @@ namespace WebStore
             //var greetings = Configuration["Greetings"];
             app.UseEndpoints(endpoints =>
             {
-                //Ïðîåêöèÿ çàïðîñà íà äåéñòâèå
+                //ÐŸÑ€Ð¾ÐµÐºÑ†Ð¸Ñ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ° Ð½Ð° Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ðµ
                 endpoints.MapGet("/greetings", async context =>
                 {
                     //await context.Response.WriteAsync(greetings);
@@ -38,8 +38,8 @@ namespace WebStore
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
-                // htpp:localhost:5000 -> controller = "Home" action = "Index" ïàðàìåòð  = null
-                // htpp:localhost:5000/Catalog/Products/5 controller = "Catalog" action = "Products" ïàðàìåòð  = 5
+                // htpp:localhost:5000 -> controller = "Home" action = "Index" Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€  = null
+                // htpp:localhost:5000/Catalog/Products/5 controller = "Catalog" action = "Products" Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€  = 5
             });
         }
     }
