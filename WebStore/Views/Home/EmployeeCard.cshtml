@@ -1,0 +1,28 @@
+﻿@model IEnumerable<object>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Сотрудники</title>
+</head>
+<body>
+    <h3>
+        @foreach (var employee in Model)
+        {
+            <tr>
+                <td>@employee</td>
+            </tr>
+        }
+    </h3>
+
+    <p>Дата приема на работу</p>
+    <p>@ViewBag.Message</p><br>
+
+    <hr />
+    <a href="~/Home/Employees">Сотрудники</a>
+    <a href="~/Home/Index">Домой</a>
+
+</body>
+</html>
