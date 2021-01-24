@@ -9,17 +9,9 @@ namespace WebStore
 {
     public record Startup(IConfiguration Configuration)
     {
-        //private IConfiguration Configuration { get; }
-
-        //public Startup(IConfiguration Configuration)
-        //{
-        //    this.Configuration = Configuration;
-        //}
-
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMvc();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+           services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -36,6 +28,7 @@ namespace WebStore
             //var greetings = Configuration["Greetings"];
             app.UseEndpoints(endpoints =>
             {
+                //Проекция запроса на действие
                 endpoints.MapGet("/greetings", async context =>
                 {
                     //await context.Response.WriteAsync(greetings);
