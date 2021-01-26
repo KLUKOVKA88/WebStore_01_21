@@ -31,11 +31,14 @@ namespace WebStore.Controllers
         public IActionResult Create() => View("Edit", new EmployeeViewModel());
 
         #region Edit
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int? id)
         {
-            if (id <= 0) return BadRequest();
+            if (id is null)
+                return View(new EmployeeViewModel());
 
-            var employee = _EmployeesData.Get(id);
+                if (id <= 0) return BadRequest();          
+
+            var employee = _EmployeesData.Get((int)id);
 
             if (employee is null)
                 return NotFound();
