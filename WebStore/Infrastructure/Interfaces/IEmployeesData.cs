@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using WebStore.Models;
 
 namespace WebStore.Infrastructure.Interfaces
@@ -7,11 +6,8 @@ namespace WebStore.Infrastructure.Interfaces
     public interface IEmployeesData
     {
         IEnumerable<Employee> Get();
-
-        IEmployeesData Get(int id);
-
+        Employee Get(int id);
         int Add(Employee employee);
-
         void Update(Employee employee);
         bool Delete(int id);
     }
