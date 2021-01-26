@@ -28,7 +28,7 @@ namespace WebStore.Controllers
             return NotFound();               
         }
 
-      
+        public IActionResult Create() => View("Edit", new EmployeeViewModel());
 
         #region Edit
         public IActionResult Edit(int id)
@@ -65,7 +65,10 @@ namespace WebStore.Controllers
                 Age = model.Age
             };
 
-            _EmployeesData.Update(employee);
+            if (employee.Id == 0)
+                _EmployeesData.Add(employee);
+            else
+                _EmployeesData.Update(employee);
 
             return RedirectToAction("Index");
         }
