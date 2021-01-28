@@ -53,6 +53,11 @@ namespace WebStore.Infrastructure.Services
             var item = Get(id);
             if (item is null) return false;
             return _Employees.Remove(item);             
-        }                      
+        }
+
+        public void Dispose()
+        {
+           
+        }
     }
 }
