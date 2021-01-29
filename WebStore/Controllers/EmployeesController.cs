@@ -14,7 +14,7 @@ namespace WebStore.Controllers
     {
         private IEmployeesData _EmployeesData;
 
-        public EmployeesController(IEmployeesData EmployeesData) => _EmployeesData = EmployeesData; 
+        public EmployeesController(IEmployeesData EmployeesData) => _EmployeesData = EmployeesData;
 
         //[Route("all")]
         public IActionResult Index() => View(_EmployeesData.Get());
@@ -25,7 +25,7 @@ namespace WebStore.Controllers
             var employee = _EmployeesData.Get(id);
             if (employee is not null)
                 return View(employee);
-            return NotFound();               
+            return NotFound();
         }
 
         public IActionResult Create() => View("Edit", new EmployeeViewModel());
@@ -36,7 +36,7 @@ namespace WebStore.Controllers
             if (id is null)
                 return View(new EmployeeViewModel());
 
-                if (id <= 0) return BadRequest();          
+            if (id <= 0) return BadRequest();
 
             var employee = _EmployeesData.Get((int)id);
 
@@ -61,6 +61,11 @@ namespace WebStore.Controllers
             if (model is null)
                 throw new ArgumentNullException(nameof(model));
 
+            if (model.Name == "Усама" && model.MiddleName == "бен" && model.LastName == "Ладен")
+                ModelState.AddModelError("", "Террористов не берем!");
+
+            if (!ModelState.IsValid) return View(model);
+
             var employee = new Employee
             {
                 Id = model.Id,
@@ -77,50 +82,51 @@ namespace WebStore.Controllers
 
             return RedirectToAction("Index");
         }
-        #endregion
 
-        #region Delete
-        public IActionResult Delete(int id)
-        {
-            if (id <= 0) return BadRequest();
+            #endregion
 
-            var employee = _EmployeesData.Get(id);
-
-            if (employee is null)
-                return NotFound();
-
-            return View(new EmployeeViewModel
+            #region Delete
+            public IActionResult Delete(int id)
             {
-                Id = employee.Id,
-                LastName = employee.LastName,
-                Name = employee.FirstName,
-                MiddleName = employee.Patronymic,
-                Age = employee.Age
-            });
-        }
-        [HttpPost]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            _EmployeesData.Delete(id);
-            return RedirectToAction("Index");
-        }
-        #endregion
+                if (id <= 0) return BadRequest();
 
-        //public IActionResult EmployeeCard(int Id)
-        //{
-        //    List<object> exactEmployee = new List<object>();
-        //    foreach (var employee in __Employees)
-        //    {
-        //        if (employee.Id == Id)
-        //        {
-        //            ViewBag.Message = employee.EmpDate;
-        //            exactEmployee.Add(employee.LastName);
-        //            exactEmployee.Add(employee.FirstName);
-        //            exactEmployee.Add(employee.Patronymic);
-        //            break;
-        //        }
-        //    }
-        //    return View(exactEmployee);
-        //}
+                var employee = _EmployeesData.Get(id);
+
+                if (employee is null)
+                    return NotFound();
+
+                return View(new EmployeeViewModel
+                {
+                    Id = employee.Id,
+                    LastName = employee.LastName,
+                    Name = employee.FirstName,
+                    MiddleName = employee.Patronymic,
+                    Age = employee.Age
+                });
+            }
+            [HttpPost]
+            public IActionResult DeleteConfirmed(int id)
+            {
+                _EmployeesData.Delete(id);
+                return RedirectToAction("Index");
+            }
+            #endregion
+
+            //public IActionResult EmployeeCard(int Id)
+            //{
+            //    List<object> exactEmployee = new List<object>();
+            //    foreach (var employee in __Employees)
+            //    {
+            //        if (employee.Id == Id)
+            //        {
+            //            ViewBag.Message = employee.EmpDate;
+            //            exactEmployee.Add(employee.LastName);
+            //            exactEmployee.Add(employee.FirstName);
+            //            exactEmployee.Add(employee.Patronymic);
+            //            break;
+            //        }
+            //    }
+            //    return View(exactEmployee);
+            //}
+        }
     }
-}
