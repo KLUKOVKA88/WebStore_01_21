@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Infrastructure.Middleware;
-using WebStore.Infrastructure.Conventions;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Services;
 using System;
@@ -27,7 +26,7 @@ namespace WebStore
 
             services
                  .AddControllersWithViews(/*opt => opt.Conventions.Add(new TestControllerModelConvention())*/)
-                .AddRazorRuntimeCompilation();
+                 .AddRazorRuntimeCompilation();
         }
        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env /*, IServiceProvider services*/)
@@ -68,14 +67,7 @@ namespace WebStore
             //var greetings = Configuration["Greetings"];
             app.UseEndpoints(endpoints =>
             {
-                //Проекция запроса на действие
-                endpoints.MapGet("/greetings", async context =>
-                {
-                    //await context.Response.WriteAsync(greetings);
-                    await context.Response.WriteAsync(Configuration["Greetings"]);
-                });
-
-                endpoints.MapControllerRoute(
+              endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
                 // htpp:localhost:5000 -> controller = "Home" action = "Index" параметр  = null
