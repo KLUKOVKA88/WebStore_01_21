@@ -8,6 +8,8 @@ using WebStore.Infrastructure.Middleware;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Services;
 using System;
+using WebStore.DAL.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebStore
 {
@@ -15,6 +17,9 @@ namespace WebStore
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<WebStoreDB>(opt => opt.UseSqlite(Configuration.GetConnectionString("Sqlite")));
+            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+
             //регистрируем сервис
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             services.AddTransient<IProductData, InMemoryProductData>();
