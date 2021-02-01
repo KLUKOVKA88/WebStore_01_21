@@ -10,6 +10,7 @@ using WebStore.Infrastructure.Services;
 using System;
 using WebStore.DAL.Context;
 using Microsoft.EntityFrameworkCore;
+using WebStore.Data;
 
 namespace WebStore
 {
@@ -19,6 +20,7 @@ namespace WebStore
         {
             //services.AddDbContext<WebStoreDB>(opt => opt.UseSqlite(Configuration.GetConnectionString("Sqlite")));
             services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddTransient<WebStoreDbInitializer>();
 
             //регистрируем сервис
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
@@ -35,7 +37,7 @@ namespace WebStore
                  .AddRazorRuntimeCompilation();
         }
        
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env /*, IServiceProvider services*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db /*, IServiceProvider services*/)
         {
             //var employees1 = services.GetService<IEmployeesData>();
             //var employees2 = services.GetService<IEmployeesData>();
@@ -48,6 +50,8 @@ namespace WebStore
             //    var employees3 = scope.ServiceProvider.GetService<IEmployeesData>();
             //    var hash3 = employees3.GetHashCode();
             //}
+
+            db.Initialize();
 
             if (env.IsDevelopment())
             {
