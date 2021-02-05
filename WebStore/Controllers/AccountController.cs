@@ -11,13 +11,14 @@ namespace WebStore.Controllers
     {
         private readonly UserManager<User> _UserManager;
         private readonly SignInManager<User> _SignInManager;
-
+                
         public AccountController(UserManager<User> UserManager, SignInManager<User> SignInManager)
         {
             _UserManager = UserManager;
             _SignInManager = SignInManager;
         }
 
+        #region Register
         public IActionResult Register() => View(new RegisterUserViewModel());
 
         [HttpPost, ValidateAntiForgeryToken/*, ActionName ("Register")*/]
@@ -42,5 +43,38 @@ namespace WebStore.Controllers
                 ModelState.AddModelError("", error.Description);
             return View(Model);
         }
+        #endregion
+
+        #region Login
+        public IActionResult Login(string ReturnUrl) => View(new LoginViewModel { ReturnUrl =ReturnUrl });
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel Model )
+        {
+            if (!ModelState.IsValid) return View(Model);
+
+            var login_result = await _SignInManager.PasswordSignInAsync(
+                Model.UserName,
+                Model.Password,
+                Model.RememberMe,
+#if DEBUG
+                false
+#else
+                true
+#endif
+                );
+
+            if (login_result.Succeeded)
+            {
+                return LocalRedirect(Model.ReturnUrl ?? "/");
+
+
+            }
+
+            ModelState.AddModelError("", "Неверное имя пользователя, или пароль! ");
+
+            return View(Model);
+        }
+        #endregion
     }
 }
