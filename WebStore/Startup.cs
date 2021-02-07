@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Infrastructure.Middleware;
-using WebStore.Infrastructure.Conventions;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Services;
+using System;
 
 namespace WebStore
 {
@@ -17,15 +17,33 @@ namespace WebStore
         {
             //регистрируем сервис
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
-           //services.AddMvc(opt => opt.Conventions.Add(new TestControllerModelConvention()));         
+            services.AddTransient<IProductData, InMemoryProductData>();
 
-           services
-                .AddControllersWithViews(/*opt => opt.Conventions.Add(new TestControllerModelConvention())*/)
-                .AddRazorRuntimeCompilation();
+            //services.AddTransient<>(); так регистрируем сервис, который не должен хранить состояние
+            //services.AddScoped<>(); так регистрируем сервис, который должен помнить состояние на время обработки входящего потока          
+            //services.AddSingleton<>(); так регистрируем сервис, хранящий состояние на все время жизни приложения 
+
+            //services.AddMvc(opt => opt.Conventions.Add(new TestControllerModelConvention()));        
+
+            services
+                 .AddControllersWithViews(/*opt => opt.Conventions.Add(new TestControllerModelConvention())*/)
+                 .AddRazorRuntimeCompilation();
         }
        
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env /*, IServiceProvider services*/)
         {
+            //var employees1 = services.GetService<IEmployeesData>();
+            //var employees2 = services.GetService<IEmployeesData>();
+
+            //var hash1 = employees1.GetHashCode();
+            //var hash2 = employees2.GetHashCode();
+
+            //using (var scope = services.CreateScope())
+            //{
+            //    var employees3 = scope.ServiceProvider.GetService<IEmployeesData>();
+            //    var hash3 = employees3.GetHashCode();
+            //}
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -50,14 +68,7 @@ namespace WebStore
             //var greetings = Configuration["Greetings"];
             app.UseEndpoints(endpoints =>
             {
-                //Проекция запроса на действие
-                endpoints.MapGet("/greetings", async context =>
-                {
-                    //await context.Response.WriteAsync(greetings);
-                    await context.Response.WriteAsync(Configuration["Greetings"]);
-                });
-
-                endpoints.MapControllerRoute(
+              endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
                 // htpp:localhost:5000 -> controller = "Home" action = "Index" параметр  = null
