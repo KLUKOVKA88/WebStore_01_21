@@ -8,6 +8,11 @@ using WebStore.Infrastructure.Middleware;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Services;
 using System;
+using WebStore.DAL.Context;
+using Microsoft.EntityFrameworkCore;
+using WebStore.Data;
+using WebStore.Infrastructure.Services.InMemory;
+using WebStore.Infrastructure.Services.InSQL;
 
 namespace WebStore
 {
@@ -15,9 +20,14 @@ namespace WebStore
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<WebStoreDB>(opt => opt.UseSqlite(Configuration.GetConnectionString("Sqlite")));
+            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddTransient<WebStoreDbInitializer>();
+
             //регистрируем сервис
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
-            services.AddTransient<IProductData, InMemoryProductData>();
+            //services.AddTransient<IProductData, InMemoryProductData>();
+            services.AddTransient<IProductData, SqlProductData>();
 
             //services.AddTransient<>(); так регистрируем сервис, который не должен хранить состояние
             //services.AddScoped<>(); так регистрируем сервис, который должен помнить состояние на время обработки входящего потока          
@@ -30,7 +40,7 @@ namespace WebStore
                  .AddRazorRuntimeCompilation();
         }
        
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env /*, IServiceProvider services*/)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db /*, IServiceProvider services*/)
         {
             //var employees1 = services.GetService<IEmployeesData>();
             //var employees2 = services.GetService<IEmployeesData>();
@@ -43,6 +53,8 @@ namespace WebStore
             //    var employees3 = scope.ServiceProvider.GetService<IEmployeesData>();
             //    var hash3 = employees3.GetHashCode();
             //}
+
+            db.Initialize();
 
             if (env.IsDevelopment())
             {
