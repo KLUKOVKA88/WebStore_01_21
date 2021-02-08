@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -9,6 +10,7 @@ using WebStore.ViewModels;
 namespace WebStore.Controllers
 {
     //[Controller]
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<User> _UserManager;
@@ -23,8 +25,11 @@ namespace WebStore.Controllers
         }
 
         #region Register
+
+        [AllowAnonymous]
         public IActionResult Register() => View(new RegisterUserViewModel());
 
+        [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken/*, ActionName ("Register")*/]
         public async Task<IActionResult> Register/*Async*/(RegisterUserViewModel Model)
         {
@@ -60,8 +65,12 @@ namespace WebStore.Controllers
         #endregion
 
         #region Login
+
+        [AllowAnonymous]
         public IActionResult Login(string ReturnUrl) => View(new LoginViewModel { ReturnUrl =ReturnUrl });
 
+        
+        [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel Model )
         {
