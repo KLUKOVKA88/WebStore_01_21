@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebStore.Data;
+using WebStore.Domain.Entities.Identity;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Models;
 using WebStore.ViewModels;
@@ -10,6 +12,7 @@ using WebStore.ViewModels;
 namespace WebStore.Controllers
 {
     //[Route("staff")]
+    [Authorize]
     public class EmployeesController : Controller
     {
         private IEmployeesData _EmployeesData;
@@ -31,6 +34,8 @@ namespace WebStore.Controllers
         public IActionResult Create() => View("Edit", new EmployeeViewModel());
 
         #region Edit
+
+        [Authorize(Roles = Role.Administrator)]
         public IActionResult Edit(int? id)
         {
             if (id is null)
