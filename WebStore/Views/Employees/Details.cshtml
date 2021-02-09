@@ -1,4 +1,5 @@
 ﻿@model WebStore.Models.Employee
+@using WebStore.Domain.Entities.Identity
 
 @{
     Layout = "_LayoutEmployees";
@@ -52,6 +53,9 @@
 <div>
     @*@Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |*@
     <a asp-action="Index" class="btn btn-default">Back to List</a>
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    @if (User.IsInRole(Role.Administrator))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    }
 </div>

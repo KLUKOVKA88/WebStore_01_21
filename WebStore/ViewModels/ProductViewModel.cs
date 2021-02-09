@@ -10,5 +10,7 @@
 
         public decimal Price { get; init; }
 
+        public string Brand { get; init; }
+
     }
 }
