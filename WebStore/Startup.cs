@@ -15,6 +15,7 @@ using WebStore.Infrastructure.Services.InMemory;
 using WebStore.Infrastructure.Services.InSQL;
 using WebStore.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using WebStore.Infrastructure.Services.InCookies;
 
 namespace WebStore
 {
@@ -67,6 +68,7 @@ namespace WebStore
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddTransient<IProductData, InMemoryProductData>();
             services.AddTransient<IProductData, SqlProductData>();
+            services.AddTransient<ICartService, InCookiesCartService>();
 
             //services.AddTransient<>(); так регистрируем сервис, который не должен хранить состояние
             //services.AddScoped<>(); так регистрируем сервис, который должен помнить состояние на время обработки входящего потока          
