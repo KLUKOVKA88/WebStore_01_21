@@ -124,7 +124,11 @@ namespace WebStore
             //var greetings = Configuration["Greetings"];
             app.UseEndpoints(endpoints =>
             {
-              endpoints.MapControllerRoute(
+                endpoints.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+              );
+                endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
                 // htpp:localhost:5000 -> controller = "Home" action = "Index" параметр  = null
