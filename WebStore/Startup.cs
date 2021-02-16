@@ -23,9 +23,26 @@ namespace WebStore
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            var connection_string_name = Configuration["ConnectionString"];
             //services.AddDbContext<WebStoreDB>(opt => opt.UseSqlite(Configuration.GetConnectionString("Sqlite")));
+
+            switch (connection_string_name)
+            {
+                default: throw new InvalidOperationException($"Подключение {connection_string_name} не поддерживается");
+                case "SqlServer":
+                    services.AddDbContext<WebStoreDB>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString(connection_string_name))
+                          .UseLazyLoadingProxies()
+               );
+                    break;
+                case "Sqlite":
+                    services.AddDbContext<WebStoreDB>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString(connection_string_name), o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));
+                    break;
+            }
+
             services.AddDbContext<WebStoreDB>(opt => 
-                opt.UseSqlServer(Configuration.GetConnectionString("Default"))
+                opt.UseSqlServer(Configuration.GetConnectionString(connection_string_name))
                    .UseLazyLoadingProxies()
                 );
             services.AddTransient<WebStoreDbInitializer>();

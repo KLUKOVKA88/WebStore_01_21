@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore", "WebStore\WebSto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.Domain", "WebStore.Domain\WebStore.Domain.csproj", "{71699AF8-7D39-4980-8CE0-F93F79DAC179}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.DAL", "WebStore.DAL\WebStore.DAL.csproj", "{DA459C07-948A-44C5-BD6B-4DF4D3A2A28C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebStore.DAL", "WebStore.DAL\WebStore.DAL.csproj", "{DA459C07-948A-44C5-BD6B-4DF4D3A2A28C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.DAL.Sqlite", "WebStore.DAL.Sqlite\WebStore.DAL.Sqlite.csproj", "{F1457E90-AC36-4D35-9205-003604407A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{DA459C07-948A-44C5-BD6B-4DF4D3A2A28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA459C07-948A-44C5-BD6B-4DF4D3A2A28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA459C07-948A-44C5-BD6B-4DF4D3A2A28C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1457E90-AC36-4D35-9205-003604407A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1457E90-AC36-4D35-9205-003604407A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1457E90-AC36-4D35-9205-003604407A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1457E90-AC36-4D35-9205-003604407A7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
