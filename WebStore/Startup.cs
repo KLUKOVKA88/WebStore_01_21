@@ -72,6 +72,7 @@ namespace WebStore
             //services.AddTransient<IProductData, InMemoryProductData>();
             services.AddTransient<IProductData, SqlProductData>();
             services.AddTransient<ICartService, InCookiesCartService>();
+            services.AddTransient<IOrderService, SqlOrderService>();
 
             //services.AddTransient<>(); так регистрируем сервис, который не должен хранить состояние
             //services.AddScoped<>(); так регистрируем сервис, который должен помнить состояние на время обработки входящего потока          

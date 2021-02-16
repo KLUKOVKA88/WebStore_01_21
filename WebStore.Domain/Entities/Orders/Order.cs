@@ -16,7 +16,7 @@ namespace WebStore.Domain.Entities.Orders
         public string Phone { get; set; }
 
         [Required]
-        public string Adress { get; set; }
+        public string Address { get; set; }
 
         public DateTime Date { get; set; } = DateTime.Now;
 
