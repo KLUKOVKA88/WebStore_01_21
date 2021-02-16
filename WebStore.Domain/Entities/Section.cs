@@ -12,8 +12,8 @@ namespace WebStore.Domain.Entities
         public int? ParentId { get; set; }
 
         [ForeignKey(nameof(ParentId))]
-        public Section Parent { get; set; } //Psren_Parent_Id автоматически создается ключ, но можно без этого самим описать
+        public virtual Section Parent { get; set; } //Psren_Parent_Id автоматически создается ключ, но можно без этого самим описать
 
-        public ICollection<Product> Products { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

@@ -6,13 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebStore.Infrastructure.Middleware;
 using WebStore.Infrastructure.Interfaces;
-using WebStore.Infrastructure.Services;
+
 using System;
 using WebStore.DAL.Context;
 using Microsoft.EntityFrameworkCore;
 using WebStore.Data;
 using WebStore.Infrastructure.Services.InMemory;
 using WebStore.Infrastructure.Services.InSQL;
+using WebStore.Domain.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using WebStore.Infrastructure.Services.InCookies;
 
 namespace WebStore
 {
@@ -20,14 +23,73 @@ namespace WebStore
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            var connection_string_name = Configuration["ConnectionString"];
             //services.AddDbContext<WebStoreDB>(opt => opt.UseSqlite(Configuration.GetConnectionString("Sqlite")));
-            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+            switch (connection_string_name)
+            {
+                default: throw new InvalidOperationException($"Подключение {connection_string_name} не поддерживается");
+                case "SqlServer":
+                    services.AddDbContext<WebStoreDB>(opt =>
+                       opt.UseSqlServer(Configuration.GetConnectionString(connection_string_name))
+                          .UseLazyLoadingProxies()
+               );
+                    break;
+                case "Sqlite":
+                    services.AddDbContext<WebStoreDB>(opt =>
+                    opt.UseSqlServer(Configuration.GetConnectionString(connection_string_name), o => o.MigrationsAssembly("WebStore.DAL.Sqlite")));
+                    break;
+            }
+
+            services.AddDbContext<WebStoreDB>(opt => 
+                opt.UseSqlServer(Configuration.GetConnectionString(connection_string_name))
+                   .UseLazyLoadingProxies()
+                );
             services.AddTransient<WebStoreDbInitializer>();
+
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<WebStoreDB>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(opt =>
+            {
+#if DEBUG
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireDigit = false;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequiredUniqueChars = 3;
+#endif
+
+                opt.User.RequireUniqueEmail = false;
+                opt.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+                opt.Lockout.AllowedForNewUsers = false;
+                opt.Lockout.MaxFailedAccessAttempts = 10;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+            });
+
+            services.ConfigureExternalCookie(opt =>
+            {
+                opt.Cookie.Name = "WebStore.GB";
+                opt.Cookie.HttpOnly = true;
+                opt.ExpireTimeSpan = TimeSpan.FromDays(10);
+
+                opt.LoginPath = "/Account/Login";
+                opt.LogoutPath = "/Account/Logout";
+                opt.AccessDeniedPath = "/Account/AccessDenied";
+
+                opt.SlidingExpiration = true;
+            });
 
             //регистрируем сервис
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddTransient<IProductData, InMemoryProductData>();
             services.AddTransient<IProductData, SqlProductData>();
+            services.AddTransient<ICartService, InCookiesCartService>();
+            services.AddTransient<IOrderService, SqlOrderService>();
 
             //services.AddTransient<>(); так регистрируем сервис, который не должен хранить состояние
             //services.AddScoped<>(); так регистрируем сервис, который должен помнить состояние на время обработки входящего потока          
@@ -66,6 +128,9 @@ namespace WebStore
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseWelcomePage("/welcome");
 
             app.UseMiddleware<TestMiddleware>();
@@ -80,7 +145,11 @@ namespace WebStore
             //var greetings = Configuration["Greetings"];
             app.UseEndpoints(endpoints =>
             {
-              endpoints.MapControllerRoute(
+                endpoints.MapControllerRoute(
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+              );
+                endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
                 // htpp:localhost:5000 -> controller = "Home" action = "Index" параметр  = null
